@@ -10,36 +10,43 @@ public class Car : MonoBehaviour
 
     public PassengerQueueManager queueManager;
     public PassengerSpawner spawner;
+    
+public void TryBoardPassenger()
+{
+    if (filledSeats >= capacity) return;
 
-    public void TryBoardPassenger()
+    Passenger frontPassenger = queueManager.GetFrontPassenger();
+
+    if (frontPassenger == null) return;
+
+    // Passenger correct color ka ho aur boarding point reach kar chuka ho
+    if (frontPassenger.typeIndex == acceptedTypeIndex &&
+        frontPassenger.hasReachedBoardingPoint)
     {
-        if (filledSeats >= capacity) return;
+        // Passenger ko reserve karo taki ek hi car use le
+        //frontPassenger.isReserved = true;
 
-        Passenger frontPassenger = queueManager.GetFrontPassenger();
-        if (frontPassenger == null) return;
+        // Seat select karo
+        Transform seatTarget = seatPoints[filledSeats];
 
-       if (frontPassenger.typeIndex == acceptedTypeIndex 
-    && frontPassenger.hasReachedBoardingPoint)
-        
+        // Passenger ko seat pe bhejo
+        frontPassenger.SitOnSeat(seatTarget, capacity);
+
+        // Queue update
+        queueManager.RemoveFrontPassenger();
+        spawner.OnPassengerBoarded();
+
+        filledSeats++;
+
+        // Car full ho gayi
+        if (filledSeats >= capacity)
         {
-            // Seat target assign karo
-            Transform seatTarget = seatPoints[filledSeats];
-
-           // frontPassenger.SetFinalPoint(seatTarget);
-           // frontPassenger.SitOnSeat(seatTarget,capacity);
-            frontPassenger.SitOnSeat(seatTarget, capacity);
-
-            queueManager.RemoveFrontPassenger();
-            spawner.OnPassengerBoarded();
-
-            filledSeats++;
-
-            if (filledSeats >= capacity)
-            {
-                CarFull();
-            }
+            CarFull();
         }
     }
+}
+
+
 
     void CarFull()
     {

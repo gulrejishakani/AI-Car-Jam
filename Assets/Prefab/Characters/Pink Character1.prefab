@@ -2561,8 +2561,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Passenger
   typeIndex: 2
-  moveSpeed: 0.25
+  moveSpeed: 0.4
   hasReachedBoardingPoint: 0
+  animator: {fileID: 2076082809373164236}
 --- !u!1 &6868807191016840043
 GameObject:
   m_ObjectHideFlags: 0

@@ -2599,7 +2599,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Passenger
   typeIndex: 0
-  moveSpeed: 0.25
+  moveSpeed: 0.4
   hasReachedBoardingPoint: 0
 --- !u!1 &7040239297524390887
 GameObject:
