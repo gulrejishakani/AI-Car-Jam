@@ -84,7 +84,7 @@ private Animator animator;
             transform.position += new Vector3(moveX, 0, 0);
             transform.forward = new Vector3(Mathf.Sign(xDiff), 0, 0);
         }
-        else
+       /* else
         {
             reachedFinal = true;
             animator.SetBool("IsWaking", false);
@@ -93,7 +93,20 @@ private Animator animator;
                 {
                     hasReachedBoardingPoint = true;
                 }
-        }     
+        }     */
+
+
+        else
+            {
+                reachedFinal = true;
+                animator.SetBool("IsWaking", false);
+
+                if (!isSeated && !boardingBusy)
+                {
+                    hasReachedBoardingPoint = true;
+                    boardingBusy = true;   // lock boarding point
+                }
+            }
     }
 
 public void SitOnSeat(Transform seatTarget, int seatCapacity)
@@ -146,6 +159,7 @@ IEnumerator SitMove(Transform seatTarget, int seatCapacity)
     }
 
     boardingBusy = false;
+   // hasReachedBoardingPoint = false;
 }
 
 }
