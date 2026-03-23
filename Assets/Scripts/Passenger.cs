@@ -1,4 +1,4 @@
-
+/*
 using UnityEngine;
 using System.Collections;
 
@@ -43,9 +43,8 @@ private Animator animator;
     {
        if (isSeated) return;
        
-        //if (boardingPoint == null || reachedFinal) return;
-        if (boardingPoint == null || reachedFinal && isSeated) return;
-
+       
+      
         Vector3 current = transform.position;
         Vector3 target = boardingPoint.position;
 
@@ -84,16 +83,7 @@ private Animator animator;
             transform.position += new Vector3(moveX, 0, 0);
             transform.forward = new Vector3(Mathf.Sign(xDiff), 0, 0);
         }
-       /* else
-        {
-            reachedFinal = true;
-            animator.SetBool("IsWaking", false);
-
-              if (!isSeated)
-                {
-                    hasReachedBoardingPoint = true;
-                }
-        }     */
+      
 
 
         else
@@ -159,9 +149,161 @@ IEnumerator SitMove(Transform seatTarget, int seatCapacity)
     }
 
     boardingBusy = false;
+    hasReachedBoardingPoint = false;
+reachedZ = false;
+reachedFinal = false;
    // hasReachedBoardingPoint = false;
 }
 
 }
 
 
+*/
+
+
+
+
+
+
+
+
+using UnityEngine;
+using System.Collections;
+
+public class Passenger : MonoBehaviour
+{
+    public int typeIndex;
+    public float moveSpeed = 2f;
+
+    private Transform boardingPoint;
+    private bool reachedZ = false;
+
+    [Header("Car Seats")]
+    public bool hasReachedBoardingPoint = false;
+    private bool isSeated = false;
+
+    [Header("Animation")]
+    private Animator animator;
+
+    // ✅ GLOBAL LOCK (queue control)
+    public static bool boardingBusy = false;
+
+    void Start()
+    {
+        if (animator == null)
+            animator = GetComponent<Animator>();
+    }
+
+    public void SetFinalPoint(Transform finalPoint)
+    {
+        boardingPoint = finalPoint;
+        reachedZ = false;
+        hasReachedBoardingPoint = false;
+    }
+
+    void Update()
+    {
+        if (isSeated) return;
+        if (boardingPoint == null) return;
+
+        Vector3 current = transform.position;
+        Vector3 target = boardingPoint.position;
+
+        // 🔹 STEP 1: Z movement
+        if (!reachedZ)
+        {
+            float zDiff = target.z - current.z;
+
+            if (Mathf.Abs(zDiff) > 0.05f)
+            {
+                animator.SetBool("IsWaking", true);
+
+                float moveZ = Mathf.Sign(zDiff) * moveSpeed * Time.deltaTime;
+                transform.position += new Vector3(0, 0, moveZ);
+                transform.forward = new Vector3(0, 0, Mathf.Sign(zDiff));
+            }
+            else
+            {
+                reachedZ = true;
+            }
+
+            return;
+        }
+
+        // 🔹 STEP 2: X movement
+        float xDiff = target.x - transform.position.x;
+
+        if (Mathf.Abs(xDiff) > 0.05f)
+        {
+            animator.SetBool("IsWaking", true);
+
+            float moveX = Mathf.Sign(xDiff) * moveSpeed * Time.deltaTime;
+            transform.position += new Vector3(moveX, 0, 0);
+            transform.forward = new Vector3(Mathf.Sign(xDiff), 0, 0);
+        }
+        else
+        {
+            animator.SetBool("IsWaking", false);
+
+            // ✅ ONLY mark ready (LOCK yaha nahi lagana)
+            if (!isSeated)
+            {
+                hasReachedBoardingPoint = true;
+            }
+        }
+    }
+
+    public void SitOnSeat(Transform seatTarget, int seatCapacity)
+    {
+        StartCoroutine(SitMove(seatTarget, seatCapacity));
+    }
+
+    IEnumerator SitMove(Transform seatTarget, int seatCapacity)
+    {
+        isSeated = true;
+
+        animator.SetBool("IsWaking", false);
+        animator.SetBool("IsSeating", true);
+
+        Vector3 startPos = transform.position;
+        Vector3 endPos = seatTarget.position;
+
+        float t = 0f;
+        float speed = 4f;
+        float jumpHeight = 0.2f;
+
+        while (t < 1f)
+        {
+            t += Time.deltaTime * speed;
+
+            Vector3 pos = Vector3.Lerp(startPos, endPos, t);
+            pos.y += Mathf.Sin(t * Mathf.PI) * jumpHeight;
+
+            transform.position = pos;
+
+            yield return null;
+        }
+
+        transform.SetParent(seatTarget);
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.identity;
+
+        // 🔹 Scale
+        if (seatCapacity == 4)
+        {
+            transform.localScale = new Vector3(0.96f, 0.87f, 1.30f);
+        }
+        else if (seatCapacity == 6)
+        {
+            transform.localScale = new Vector3(2.08f, 1.89f, 2.84f);
+        }
+        else if (seatCapacity == 10)
+        {
+            transform.localScale = new Vector3(95.9f, 87.18f, 130.77f);
+        }
+
+        // ✅ UNLOCK NEXT PASSENGER
+        yield return new WaitForSeconds(0.05f);
+        boardingBusy = false;
+    }
+}
