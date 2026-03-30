@@ -38,7 +38,7 @@ public class GridGenerator : MonoBehaviour
     public GameObject cellPrefab;
 
     // 🔥 Add this (tumhari given position)
-    public Vector3 startPos = new Vector3(1.82f, 0f, 6.58f);
+    public Vector3 startPos = new Vector3(1.83f, 0f, 8.758f);
 
     void Start()
     {
@@ -60,3 +60,5 @@ public class GridGenerator : MonoBehaviour
         }
     }
 }
+
+

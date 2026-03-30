@@ -604,7 +604,6 @@ MonoBehaviour:
   m_Cameras: []
   m_RendererIndex: -1
   m_VolumeLayerMask:
-    serializedVersion: 2
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
@@ -677,7 +676,7 @@ MonoBehaviour:
   cols: 6
   cellSize: 0.26
   cellPrefab: {fileID: 4905511367108477841, guid: b026c0133028acb4c814d526abcd3e9b, type: 3}
-  startPos: {x: 2.02, y: 0.05, z: 7.89}
+  startPos: {x: 2.02, y: 0, z: 7.89}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -795,10 +794,8 @@ MonoBehaviour:
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 1
   m_RenderingLayersMask:
-    serializedVersion: 0
     m_Bits: 1
   m_ShadowRenderingLayersMask:
-    serializedVersion: 0
     m_Bits: 1
   m_Version: 4
   m_LightLayerMask: 1
@@ -1444,7 +1441,6 @@ MonoBehaviour:
   m_IgnoreReversedGraphics: 1
   m_BlockingObjects: 0
   m_BlockingMask:
-    serializedVersion: 2
     m_Bits: 4294967295
 --- !u!114 &1016675400
 MonoBehaviour:
